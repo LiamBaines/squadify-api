@@ -1,0 +1,26 @@
+spring:
+    jpa:
+        database: MYSQL
+        show-sql: false
+        hibernate.ddl-auto: update
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    session:
+        store-type: jdbc
+        jdbc:
+            initialize-schema: always
+cloud:
+    aws:
+        credentials:
+            access-key: ${AWS_ACCESS_KEY}
+            secret-key: ${AWS_SECRET_KEY}
+            instance-profile: true
+            profile-name: default
+        region:
+            static: eu-west-2
+        rds:
+            squadify-dev:
+                username: admin
+                password: ${SQUADIFY_DEV_DB_PASSWORD}
+                databaseName: squadify
+        stack:
+            auto: false

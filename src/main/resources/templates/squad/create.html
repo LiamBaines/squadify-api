@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org/">
+<head th:replace="fragments :: head">
+</head>
+<body style="background-color: black; min-height: 100vh">
+    <div class="container has-background-black is fullheight">
+        <section class="column">
+            <h3 class="title is-4 has-text-white" th:text="${title}" ></h3>
+            <div class="box">
+                <form method="POST" th:object="${form}">
+                    <div class="field has-addons">
+                        <div class="control">
+                            <input id="input" required class="input" type="text" th:field="*{name}" placeholder="Squad name">
+                        </div>
+                        <div class="control">
+                            <input id="submit" class="button is-success" type="submit" disabled value="Create squad"/>
+                        </div>
+                        <span th:errors="*{name}"></span>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+
+</body>
+</html>

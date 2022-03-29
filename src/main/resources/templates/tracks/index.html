@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org/">
+<head th:replace="fragments :: head">
+</head>
+    <body class="container">
+    <h1 th:text="${title}"></h1>
+
+    <ul>
+        <li th:each="track : ${tracks}" th:text="${track.name}"></li>
+    </ul>
+
+</body>
+</html>

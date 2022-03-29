@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org/">
+<head th:replace="fragments :: head">
+</head>
+<body style="background-color: black; min-height: 100vh">
+    <script th:src="@{/js/toggleAddSquadPanel.js}"></script>
+    <script th:src="@{/js/preventNullSquadNameInput.js}"></script>
+    <script th:src="@{/js/copyToClipboard.js}"></script>
+    <script th:src="@{/js/editSquad.js}"></script>
+        <div class="container has-background-black is-fullheight">
+        <section class="column">
+            <div class="columns is-mobile is-vcentered p-1 m-0">
+                <div id="headingContainer" class="column is-two-thirds">
+                    <h3 id="heading" class="title is-4 has-text-white" th:text="${firstName} + '\'s squads'"></h3>
+                </div>
+                    <div class="column is-one-third">
+                        <button class="button is-rounded is-success is-fullwidth" th:onclick="toggleAddSquadPanel()">Add +</button>
+                    </div>
+            </div>
+
+            <div id="addSquadPanel" class="box is-hidden">
+                <button class="delete is-pulled-right"></button>
+                <form method="POST" th:action="@{/squad/create}"  th:object="${form}">
+                    <div class="field has-addons">
+                        <div class="control">
+                            <input id="input" required class="input" type="text" th:field="*{name}" placeholder="Squad name">
+                        </div>
+                        <div class="control">
+                            <input id="submit" class="button is-success" type="submit" disabled value="Create squad"/>
+                        </div>
+                        <span th:errors="*{name}"></span>
+                    </div>
+                </form>
+            </div>
+
+            <div class="panel is-success has-background-white" th:each="squad : ${squads}">
+                <p class="panel-heading" th:text="${squad.name}">
+<!--                    <div class="columns is-mobile">-->
+<!--                        <div th:id="'squad' + ${squad.squadKey}" class="column is-two-thirds" th:text="${squad.name}"></div>-->
+<!--                        <div class="column is-one-third has-text-right font-weight-normal">-->
+<!--                            <a th:squadKey="${squad.squadKey}" class="has-text-white" onclick="toggleSquadEditor(this.getAttribute('squadKey'))">Edit</a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </p>
+                <div class="panel-block" th:text="${squad.owner.displayName} + ' (owner)'"></div>
+                <div class="panel-block" th:each="member : ${squad.members}" th:text="${member.displayName}"></div>
+                <div class="panel-block" th:each="member : ${squad.memberRequests}">
+                    <div th:text="${member.displayName} + ' (pending)'"></div>
+                    <a class="has-text-success mx-4" th:href="@{/squad/accept/{squadKey}/{username}(squadKey=${squad.squadKey}, username=${member.username})}">Accept</a>
+                    <a class="has-text-danger mx-4" th:href="@{/squad/decline/{squadKey}/{username}(squadKey=${squad.squadKey}, username=${member.username})}">Decline</a>
+                </div>
+                <div class="columns is-mobile p-1 m-0">
+                    <div class="column is-two-fifths">
+                        <a class="button is-rounded is-success is-fullwidth" th:href="@{/playlist/create/{squadKey}(squadKey=${squad.squadKey})}">Create Playlist</a>
+                    </div>
+                    <div class="column is-two-fifths">
+                        <button class="button is-rounded is-info is-fullwidth" th:shareLink="'http://193.168.0.182:8080/squad/join/' + ${squad.squadKey}" th:onclick="copyToClipboard(this.getAttribute('shareLink'))">Invite</button>
+                    </div>
+                    <div class="column is-one-fifth">
+                        <a class="button is-rounded is-danger" th:href="@{/squad/delete/{squadKey}(squadKey=${squad.squadKey})}">✕</a>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+</body>
+</html>

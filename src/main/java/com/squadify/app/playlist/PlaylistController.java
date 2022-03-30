@@ -9,14 +9,11 @@ import com.squadify.app.user.SquadifyUserDao;
 import com.wrapper.spotify.exceptions.SpotifyWebApiException;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-
-import static com.squadify.app.SquadifyApiConfig.BASE_URL;
 
 @RestController
 @RequestMapping("playlist")
@@ -35,7 +32,6 @@ public class PlaylistController extends SquadifyController {
 
     @PostMapping("/create/{squadKey}")
     @SquadOwnerOnly
-    @CrossOrigin(origins = BASE_URL + ":3000", allowCredentials = "true")
     public PlaylistResponse createSquadPlaylist() throws ParseException, SpotifyWebApiException, IOException {
         String url = playlistCreator.createPlaylist(requestContext.getSquad()).getId();
         return new PlaylistResponse(url);

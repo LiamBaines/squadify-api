@@ -4,15 +4,14 @@ import com.squadify.app.auth.UnauthorisedException;
 import com.squadify.app.core.SquadifyController;
 import com.squadify.app.squad.SquadDao;
 import com.squadify.app.user.dto.SquadifyUserResponse;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 
-import static com.squadify.app.SquadifyApiConfig.BASE_URL;
-
 @RestController
 @RequestMapping("user")
-@CrossOrigin(origins = BASE_URL + ":3000", allowCredentials = "true")
 public class SquadifyUserController extends SquadifyController {
 
     private final SquadifyUserService squadifyUserService;
@@ -23,7 +22,6 @@ public class SquadifyUserController extends SquadifyController {
     }
 
     @GetMapping
-    @CrossOrigin(origins = BASE_URL + ":3000")
     public SquadifyUserResponse getUser(HttpSession session) throws UnauthorisedException {
         String userId = (String) session.getAttribute("userId");
         SquadifyUser squadifyUser = squadifyUserDao.findByUsername(userId).orElseThrow(() -> new UnauthorisedException("/"));

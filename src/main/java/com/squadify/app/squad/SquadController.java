@@ -17,14 +17,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
-import static com.squadify.app.SquadifyApiConfig.BASE_URL;
 import static com.squadify.app.squad.dto.SquadMemberAction.JOIN;
 import static com.squadify.app.squad.dto.SquadResponseMapper.mapToSquadResponse;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping("squads")
-@CrossOrigin(origins = {BASE_URL + ":3000", BASE_URL + ":3000/join"}, methods = {GET, POST, DELETE}, allowCredentials = "true")
 public class SquadController extends SquadifyController {
 
     private final SquadService squadService;
@@ -66,7 +63,6 @@ public class SquadController extends SquadifyController {
 
     @DeleteMapping("{squadKey}")
     @SquadOwnerOnly
-    @CrossOrigin(origins = BASE_URL + ":3000")
     public void deleteSquad(@PathVariable String squadKey) {
         // to verify: squad exists, user owns squad
         squadDao.deleteBySquadKey(squadKey);

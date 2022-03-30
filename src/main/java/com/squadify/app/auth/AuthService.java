@@ -1,5 +1,6 @@
 package com.squadify.app.auth;
 
+import com.squadify.app.SquadifyApiConfig;
 import com.squadify.app.api.SpotifyApiFactory;
 import com.squadify.app.user.SquadifyUser;
 import com.squadify.app.user.SquadifyUserDao;
@@ -24,11 +25,12 @@ import static com.squadify.app.api.SpotifyApiFactory.*;
 public class AuthService {
 
     private final SpotifyApiFactory spotifyApiFactory;
+    private final SquadifyApiConfig config;
     private final SquadifyUserDao squadifyUserDao;
     private final SquadifyUserFactory squadifyUserFactory;
 
     public AuthorizationCodeUriRequest buildAuthorizationCodeUriRequest() {
-        return spotifyApiFactory.spotifyApiWithoutUser(REDIRECT_URI)
+        return spotifyApiFactory.spotifyApiWithoutUser(config.getRedirectUrl())
                 .authorizationCodeUri()
                 .scope(
                         "playlist-modify-public " +

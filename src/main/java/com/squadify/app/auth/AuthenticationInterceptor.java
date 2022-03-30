@@ -1,5 +1,6 @@
 package com.squadify.app.auth;
 
+import com.squadify.app.SquadifyApiConfig;
 import com.squadify.app.squad.Squad;
 import com.squadify.app.squad.SquadDao;
 import com.squadify.app.user.SquadifyUser;
@@ -19,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static com.squadify.app.SquadifyApiConfig.BASE_URL;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
@@ -38,16 +38,15 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Autowired
     private RequestContext requestContext;
 
+    @Autowired
+    private SquadifyApiConfig config;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws BadRequestException, UnauthorisedException {
         boolean isMethodHandler = handler.getClass().equals(HandlerMethod.class);
         if (!isMethodHandler) {
             return true;
         }
-        boolean isFromSquadifyClient = isFromSquadifyClient(request);
-        boolean urlContainsSquadKey = urlContainsSquadKey(request);
-        boolean squadOwnershipRequired = squadOwnershipRequired(handler);
-
 
         if (isFromSquadifyClient(request)) {
             validateUserExists();
@@ -78,8 +77,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         return getMethodAnnotations(handler).contains(SquadOwnerOnly.class);
     }
 
-    private static boolean isFromSquadifyClient(HttpServletRequest request) {
-        return (BASE_URL + ":3000").equals(request.getHeader("origin"));
+    private boolean isFromSquadifyClient(HttpServletRequest request) {
+        return (config.getClientUrl()).equals(request.getHeader("origin"));
     }
 
     private static boolean urlContainsSquadKey(HttpServletRequest request) {

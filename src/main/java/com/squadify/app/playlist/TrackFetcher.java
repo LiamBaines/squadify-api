@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.hc.core5.http.ParseException;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -85,7 +86,7 @@ public class TrackFetcher {
                    .collect(toSet());
        }
        catch (Exception ignore) {
-           return null;
+           return Collections.emptySet();
        }
     }
 

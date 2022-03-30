@@ -1,9 +1,25 @@
 package com.squadify.app;
 
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
+@lombok.Value
 public class SquadifyApiConfig {
 
-    public static final String BASE_URL = "http://192.168.0.189";
-    public static final String BASE_URL_ESCAPED = BASE_URL.replace("://", "%3A%2F%2F");
+    public SquadifyApiConfig(@Value("${squadify.dev.api.url}") String apiUrl,
+                             @Value("${squadify.dev.client.url}") String clientUrl) {
+        this.apiUrl = apiUrl;
+        this.clientUrl = clientUrl;
+    }
+
+    String apiUrl;
+
+    String clientUrl;
+
+    public String getRedirectUrl() {
+        return apiUrl + "/auth/callback";
+    }
 
 }

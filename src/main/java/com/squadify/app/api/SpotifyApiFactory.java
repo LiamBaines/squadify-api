@@ -1,18 +1,19 @@
 package com.squadify.app.api;
 
+import com.squadify.app.SquadifyApiConfig;
 import com.squadify.app.user.SquadifyUser;
 import com.wrapper.spotify.SpotifyApi;
 import com.wrapper.spotify.SpotifyHttpManager;
 import com.wrapper.spotify.model_objects.credentials.AuthorizationCodeCredentials;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import static com.squadify.app.SquadifyApiConfig.BASE_URL;
-
 @Service
+@RequiredArgsConstructor
 public class SpotifyApiFactory {
 
-    public static final String REDIRECT_URI = BASE_URL + ":8080/auth/callback";
+    private final SquadifyApiConfig config;
 
     @Value("${oauth.client.id}")
     private String clientId;
@@ -24,7 +25,7 @@ public class SpotifyApiFactory {
     }
 
     public SpotifyApi spotifyApiFrom(SquadifyUser user) {
-        return spotifyApiFrom(user.getAccessToken(), user.getRefreshToken(), REDIRECT_URI);
+        return spotifyApiFrom(user.getAccessToken(), user.getRefreshToken(), config.getRedirectUrl());
     }
 
     public SpotifyApi spotifyApiFrom(AuthorizationCodeCredentials credentials, String redirect) {

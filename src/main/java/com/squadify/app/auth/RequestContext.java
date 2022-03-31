@@ -9,6 +9,7 @@ import org.springframework.web.context.annotation.RequestScope;
 @Data
 @Component
 @RequestScope
+@Deprecated
 public class RequestContext {
     private Squad squad;
     private SquadifyUser user;

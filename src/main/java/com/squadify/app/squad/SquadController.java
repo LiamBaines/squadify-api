@@ -13,12 +13,14 @@ import com.squadify.app.user.SquadifyUserDao;
 import com.wrapper.spotify.exceptions.detailed.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 import static com.squadify.app.squad.dto.SquadMemberAction.JOIN;
 import static com.squadify.app.squad.dto.SquadResponseMapper.mapToSquadResponse;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestController
 @RequestMapping("squads")
@@ -38,7 +40,7 @@ public class SquadController extends SquadifyController {
     }
 
     @PostMapping
-    public SquadResponse createSquad() throws BadRequestException {
+    public SquadResponse createSquad() {
         // to verify: user exists
         Squad squad = squadService.createSquad(requestContext.getUser());
         return mapToSquadResponse(squad);

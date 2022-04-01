@@ -17,13 +17,9 @@ import java.io.Serializable;
 public class SquadifyUser implements Serializable {
 
     @Id
-    @GeneratedValue
-    private int id;
+    private String username;
 
     private String displayName, accessToken, refreshToken;
-
-    @Column(unique = true)
-    private String username;
 
     public String getFirstName() {
         return displayName.split(" ")[0];

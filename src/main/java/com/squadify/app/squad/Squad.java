@@ -20,9 +20,6 @@ import java.util.Set;
 public class Squad {
 
     @Id
-    @GeneratedValue
-    private int id;
-
     private String squadKey;
 
     @NotBlank(message = "Squad name can''t be blank")

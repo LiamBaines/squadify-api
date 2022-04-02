@@ -181,10 +181,12 @@
 						<configuration>
 							<inputSpec>src/main/resources/squadify-api-swagger.yaml</inputSpec>
 							<generatorName>spring</generatorName>
+							<modelNameSuffix>Dto</modelNameSuffix>
 							<configOptions>
 								<sourceFolder>src/gen/java/main</sourceFolder>
 								<modelPackage>com.squadify.app.model</modelPackage>
-								<libary>spring-boot</libary>
+								<library>spring-boot</library>
+								<interfaceOnly>true</interfaceOnly>
 							</configOptions>
 						</configuration>
 					</execution>

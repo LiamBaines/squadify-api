@@ -93,14 +93,14 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     }
 
     private void validateUserExists() throws UnauthorisedException {
-        String username = (String) session.getAttribute("userId");
+        String username = (String) session.getAttribute("username");
         SquadifyUser user = squadifyUserDao.findByUsername(username).orElseThrow(() -> new UnauthorisedException("User doesn't exist"));
         requestContext.setUser(user);
     }
 
     private void validateSquadExists(HttpServletRequest request) throws BadRequestException {
         String squadKey = getSquadKeyFromUrl(request);
-        Squad squad = squadDao.findBySquadKey(squadKey).orElseThrow(() -> new BadRequestException(String.format("Squad with key %s doesn't exist", squadKey)));
+        Squad squad = squadDao.findBySquadId(squadKey).orElseThrow(() -> new BadRequestException(String.format("Squad with key %s doesn't exist", squadKey)));
         requestContext.setSquad(squad);
     }
 

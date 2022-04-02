@@ -14,7 +14,7 @@ public class SquadifyUserFactory {
     public SquadifyUser create(User user, AuthorizationCodeCredentials credentials) {
         SquadifyUser squadifyUser = new SquadifyUser.SquadifyUserBuilder()
                 .username(user.getId())
-                .displayName(user.getDisplayName())
+                .name(user.getDisplayName())
                 .accessToken(credentials.getAccessToken())
                 .refreshToken(credentials.getRefreshToken())
                 .build();

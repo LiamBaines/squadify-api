@@ -192,13 +192,13 @@ definitions:
   Squad:
     type: object
     required:
-      - squadKey
+      - squadId
       - name
       - owner
       - members
       - requests
     properties:
-      squadKey:
+      squadId:
         type: string
         example: mZgdgmg7oEbA
       name:

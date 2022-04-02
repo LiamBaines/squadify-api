@@ -14,7 +14,7 @@ public class SquadifyUserTextFixture {
     public static SquadifyUser someSquadifyUser(String username) {
         SquadifyUser squadifyUser = new SquadifyUser();
         squadifyUser.setUsername(username);
-        squadifyUser.setDisplayName(username);
+        squadifyUser.setName(username);
         return squadifyUser;
     }
 

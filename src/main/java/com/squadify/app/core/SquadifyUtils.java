@@ -16,7 +16,7 @@ public class SquadifyUtils {
 
     public static void printRepresentationPercentages(Squad squad, Map<SquadifyUser, Set<String>> userTracks, String[] commonTracks) {
         System.out.printf("\n%s - %s tracks\n", squad.getName(), commonTracks.length);
-        userTracks.entrySet().forEach(entry -> System.out.printf("%s accounts for %s%% of tracks\n", entry.getKey().getDisplayName(), getRepresentationPercentage(entry, commonTracks)));
+        userTracks.entrySet().forEach(entry -> System.out.printf("%s accounts for %s%% of tracks\n", entry.getKey().getName(), getRepresentationPercentage(entry, commonTracks)));
     }
 
     public long getRepresentationPercentage(Map.Entry<SquadifyUser, Set<String>> userTracks, String[] commonTracks) {

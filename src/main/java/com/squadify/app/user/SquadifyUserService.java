@@ -1,51 +1,30 @@
 package com.squadify.app.user;
 
+import com.squadify.app.model.SquadifyUserAndSquadsDto;
 import com.squadify.app.squad.Squad;
 import com.squadify.app.squad.SquadDao;
-import com.squadify.app.squad.dto.SquadResponse;
-import com.squadify.app.squad.dto.SquadResponseMapper;
-import com.squadify.app.user.dto.SquadifyUserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.ArrayList;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
 public class SquadifyUserService {
 
+    private final HttpSession session;
     private final SquadDao squadDao;
+    private final SquadifyUserDao squadifyUserDao;
+    private final SquadifyUserAndSquadsResponseMapper squadifyUserAndSquadsResponseMapper;
 
-    public SquadifyUserResponse mapToSquadifyUserResponse(SquadifyUser user) {
-        return SquadifyUserResponse.builder()
-                .firstName(user.getFirstName())
-                .username(user.getUsername())
-                .squads(getSimplifiedSquads(user))
-                .build();
+    public SquadifyUserAndSquadsDto getSquadifyUserAndSquads() {
+        String username = (String) session.getAttribute("username");
+        SquadifyUser squadifyUser = squadifyUserDao.findByUsername(username).orElseThrow(() -> new HttpClientErrorException(NOT_FOUND));
+        List<Squad> squads = squadDao.findByOwnerOrMembersContainsOrRequestsContains(squadifyUser);
+        return squadifyUserAndSquadsResponseMapper.map(squadifyUser, squads);
     }
-
-    public SquadifyUserResponse responseWithDirect(String redirect) {
-        return SquadifyUserResponse.builder()
-                .redirect(redirect)
-                .build();
-    }
-
-    private List<SquadResponse> getSimplifiedSquads(SquadifyUser user) {
-        return getAllSquads(user).stream()
-                .map(SquadResponseMapper::mapToSquadResponse)
-                .collect(toList());
-
-    }
-
-    private List<Squad> getAllSquads(SquadifyUser user) {
-        List<Squad> squads = new ArrayList<>();
-        squads.addAll(squadDao.findByOwner(user));
-        squads.addAll(squadDao.findByMembersContains(user));
-        squads.addAll(squadDao.findByMemberRequestsContains(user));
-        return squads;
-    }
-
 }

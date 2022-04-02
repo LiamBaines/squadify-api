@@ -5,18 +5,19 @@ info:
 host: api.squadify.me
 schemes:
   - https
+
 paths:
   /v1/user:
     get:
       tags:
         - Users
-      summary: Retrieve user
+      summary: Retrieve user and squads
       operationId: getUser
       responses:
         "200":
           description: OK
           schema:
-            $ref: "#/definitions/User"
+            $ref: "#/definitions/SquadifyUserAndSquads"
         "401":
           description: Unauthorised
   /v1/squads:
@@ -32,14 +33,14 @@ paths:
             $ref: "#/definitions/Squad"
         "401":
           description: Unauthorised
-  /v1/squads/{squadKey}:
+  /v1/squads/{squadId}:
     put:
       tags:
         - Squads
       summary: Update squad
       operationId: updateSquad
       parameters:
-        - $ref: "#/parameters/SquadKey"
+        - $ref: "#/parameters/SquadId"
         - name: body
           in: body
           required: true
@@ -48,7 +49,7 @@ paths:
             $ref: "#/definitions/UpdateSquadRequest"
       responses:
         "204":
-          description: No Content
+          description: Updated
         "401":
           description: Unauthorised
         "403":
@@ -61,55 +62,30 @@ paths:
       summary: Delete squad
       operationId: deleteSquad
       parameters:
-        - $ref: "#/parameters/SquadKey"
+        - $ref: "#/parameters/SquadId"
       responses:
         "204":
-          description: No Content
+          description: Deleted
         "401":
           description: Unauthorised
         "403":
           description: Forbidden
         "404":
           description: Not Found
-  /v1/squads/{squadKey}/members:
-    post:
-      tags:
-        - Squad members
-      summary: Add squad member
-      operationId: addMember
-      parameters:
-        - $ref: "#/parameters/SquadKey"
-        - name: body
-          in: body
-          required: true
-          description: Member to be added to the squad
-          schema:
-            $ref: "#/definitions/AddSquadMemberRequest"
-      responses:
-        "201":
-          description: Created
-        "401":
-          description: Unauthorised
-        "404":
-          description: Not Found
-  /v1/squads/{squadKey}/members/{username}:
+  /v1/squads/{squadId}/members/{username}:
     put:
       tags:
         - Squad members
-      summary: Update squad member
-      operationId: updateSquadMember
+      summary: Add squad member (approve join request)
+      operationId: createMember
       parameters:
-        - $ref: "#/parameters/SquadKey"
+        - $ref: "#/parameters/SquadId"
         - $ref: "#/parameters/Username"
-        - name: body
-          in: body
-          required: true
-          description: Updated member details
-          schema:
-            $ref: "#/definitions/UpdateSquadMemberRequest"
       responses:
+        "201":
+          description: Created
         "204":
-          description: No Content
+          description: Already exists
         "401":
           description: Unauthorised
         "403":
@@ -119,24 +95,59 @@ paths:
     delete:
       tags:
         - Squad members
-      summary: Delete squad member
-      operationId: deleteSquadMember
+      summary: Remove squad member
+      operationId: deleteMember
       parameters:
-        - $ref: "#/parameters/SquadKey"
+        - $ref: "#/parameters/SquadId"
         - $ref: "#/parameters/Username"
       responses:
         "204":
-          description: No Content
+          description: Deleted
         "401":
           description: Unauthorised
         "403":
           description: Forbidden
         "404":
           description: Not Found
-  /v1/squads/{squadKey}/playlist:
+  /v1/squads/{squadId}/requests:
+    put:
+      tags:
+        - Squad members
+      summary: Request to join a squad
+      operationId: createRequest
+      parameters:
+        - $ref: "#/parameters/SquadId"
+      responses:
+        "201":
+          description: Created
+        "204":
+          description: Already exists
+        "401":
+          description: Unauthorised
+        "404":
+          description: Not Found
+  /v1/squads/{squadId}/requests/{username}:
+    delete:
+      tags:
+        - Squad members
+      summary: Reject a join request
+      operationId: deleteRequest
+      parameters:
+        - $ref: "#/parameters/SquadId"
+        - $ref: "#/parameters/Username"
+      responses:
+        "204":
+          description: Deleted
+        "401":
+          description: Unauthorised
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+  /v1/squads/{squadId}/playlist:
     post:
       parameters:
-        - $ref: "#/parameters/SquadKey"
+        - $ref: "#/parameters/SquadId"
       tags:
         - Playlists
       summary: Create playlist
@@ -154,56 +165,23 @@ paths:
           description: Not Found
 
 definitions:
-  User:
+  SquadifyUserAndSquads:
     type: object
     required:
-      - username
-      - name
+      - user
       - squads
     properties:
-      username:
-        type: string
-        example: liam_baines
-      name:
-        type: string
-        example: Liam
+      user:
+        $ref: "#/definitions/SquadifyUser"
       squads:
         type: array
         items:
           $ref: "#/definitions/Squad"
-  Squad:
-    type: object
-    required:
-      - squadKey
-      - name
-      - members
-    properties:
-      squadKey:
-        type: string
-        example: mZgdgmg7oEbA
-      name:
-        type: string
-        example: The Gang
-      members:
-        type: array
-        items:
-          $ref: "#/definitions/SquadMember"
-      playlist:
-        $ref: "#/definitions/Playlist"
-  UpdateSquadRequest:
-    type: object
-    required:
-      - name
-    properties:
-      name:
-        type: string
-        example: The Gang
-  SquadMember:
+  SquadifyUser:
     type: object
     required:
       - username
       - name
-      - pending
     properties:
       username:
         type: string
@@ -211,23 +189,33 @@ definitions:
       name:
         type: string
         example: John
-      pending:
-        type: boolean
-  AddSquadMemberRequest:
+  Squad:
     type: object
     required:
-      - username
+      - squadKey
+      - name
+      - owner
+      - members
+      - requests
     properties:
-      username:
+      squadKey:
         type: string
-        example: johnny_baines
-  UpdateSquadMemberRequest:
-    type: object
-    required:
-      - pending
-    properties:
-      pending:
-        type: boolean
+        example: mZgdgmg7oEbA
+      name:
+        type: string
+        example: The Gang
+      owner:
+        $ref: "#/definitions/SquadifyUser"
+      members:
+        type: array
+        items:
+          $ref: "#/definitions/SquadifyUser"
+      requests:
+        type: array
+        items:
+          $ref: "#/definitions/SquadifyUser"
+      playlist:
+        $ref: "#/definitions/Playlist"
   Playlist:
     type: object
     required:
@@ -236,10 +224,18 @@ definitions:
       url:
         type: string
         example: https://open.spotify.com/playlist/37i9dQZF1DWVzZlRWgqAGH
+  UpdateSquadRequest:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        example: The Boys
 
 parameters:
-  SquadKey:
-    name: squadKey
+  SquadId:
+    name: squadId
     in: path
     required: true
     description: Unique identifier for the squad

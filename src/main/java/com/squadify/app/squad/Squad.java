@@ -1,5 +1,6 @@
 package com.squadify.app.squad;
 
+import com.squadify.app.playlist.Playlist;
 import com.squadify.app.user.SquadifyUser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,10 +21,7 @@ import java.util.Set;
 public class Squad {
 
     @Id
-    @GeneratedValue
-    private int id;
-
-    private String squadKey;
+    private String squadId;
 
     @NotBlank(message = "Squad name can''t be blank")
     @Size(max = 100, message = "Squad name can''t exceed 100 characters")
@@ -33,14 +31,14 @@ public class Squad {
     private final Set<SquadifyUser> members = new LinkedHashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private final Set<SquadifyUser> memberRequests = new LinkedHashSet<>();
+    private final Set<SquadifyUser> requests = new LinkedHashSet<>();
 
     @ManyToOne
     @HashCodeExclude
     @ToStringExclude
     private SquadifyUser owner;
 
-    private String playlistUrl;
+    private Playlist playlist;
 
     public Set<SquadifyUser> getAllUsers() {
         Set<SquadifyUser> users = new LinkedHashSet<>();
@@ -49,19 +47,34 @@ public class Squad {
         return users;
     }
 
+    @Deprecated
     public void acceptMember(SquadifyUser member) {
         members.add(member);
-        memberRequests.remove(member);
+        requests.remove(member);
     }
 
+    public void addMember(SquadifyUser member) {
+        members.add(member);
+    }
+
+    public void removeRequest(SquadifyUser member) {
+        members.remove(member);
+    }
+
+    @Deprecated
     public void declineMember(SquadifyUser member) {
-        memberRequests.remove(member);
+        requests.remove(member);
     }
 
+    @Deprecated
     public void addMemberRequest(SquadifyUser member) {
         if (!members.contains(member)) {
-            memberRequests.add(member);
+            requests.add(member);
         }
+    }
+
+    public void addRequest(SquadifyUser squadifyUser) {
+        requests.add(squadifyUser);
     }
 
     public void removeMember(SquadifyUser member) {
@@ -70,7 +83,7 @@ public class Squad {
 
     @Override
     public String toString() {
-        return String.format("%s - %s", name, squadKey);
+        return String.format("%s - %s", name, squadId);
     }
 
 }

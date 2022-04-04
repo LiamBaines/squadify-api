@@ -2,8 +2,6 @@ package com.squadify.app.playlist;
 
 import com.squadify.app.api.SpotifyApiFactory;
 import com.squadify.app.auth.AuthService;
-import com.squadify.app.core.SquadifyUtils;
-import com.squadify.app.squad.Squad;
 import com.squadify.app.squad.SquadDao;
 import com.squadify.app.user.SquadifyUser;
 import com.wrapper.spotify.exceptions.SpotifyWebApiException;
@@ -67,7 +65,7 @@ public class TrackFetcher {
 
 
     private Set<String> getTracksFromCreatedPlaylists() throws ParseException, SpotifyWebApiException, IOException {
-        List<String> squadifyPlaylists = squadDao.findByOwner(user).stream().map(Squad::getPlaylistUrl).collect(toList());
+        List<String> squadifyPlaylists = squadDao.findByOwner(user).stream().map(squad -> squad.getPlaylist().getUrl()).collect(toList());
         return execute(this::playlistsRequest).stream()
                 .filter(this::ownedByUser)
                 .filter(squad -> !squadifyPlaylists.contains(squad.getUri()))

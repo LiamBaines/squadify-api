@@ -18,8 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-import static com.squadify.app.api.SpotifyApiFactory.*;
-
 @Service
 @RequiredArgsConstructor
 public class AuthService {

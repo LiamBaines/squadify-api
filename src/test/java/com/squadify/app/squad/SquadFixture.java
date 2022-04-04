@@ -13,7 +13,7 @@ public class SquadFixture {
 
     public static Squad someSquad(int size) {
         Squad squad = new Squad();
-        squad.setSquadKey(someString());
+        squad.setSquadId(someString());
         squad.setName(someString());
         IntStream.range(1, size).forEach(i -> addMember(squad));
         squad.setOwner(someSquadifyUser());

@@ -1,39 +1,51 @@
 package com.squadify.app.squad;
 
-import com.squadify.app.squad.dto.SquadMemberAction;
+import com.squadify.app.model.SquadDto;
+import com.squadify.app.model.UpdateSquadRequestDto;
 import com.squadify.app.user.SquadifyUser;
+import com.squadify.app.user.SquadifyUserDao;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+
+import javax.servlet.http.HttpSession;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
 public class SquadService {
 
+    private final HttpSession session;
     private final SquadDao squadDao;
+    private final SquadifyUserDao squadifyUserDao;
+    private final SquadResponseMapper squadResponseMapper;
 
-    public void addPlaylistUrlToSquad(Squad squad, String playlistUrl) {
-        squad.setPlaylistUrl(playlistUrl);
-        squadDao.save(squad);
-    }
-
-    Squad createSquad(SquadifyUser owner) {
+    SquadDto createSquad() {
+        String username = (String) session.getAttribute("username");
+        SquadifyUser squadifyUser = squadifyUserDao.findByUsername(username).orElseThrow(() -> new HttpClientErrorException(NOT_FOUND));
         Squad squad = new Squad();
-        squad.setOwner(owner);
-        squad.setSquadKey(RandomStringUtils.randomAlphanumeric(12));
+        squad.setOwner(squadifyUser);
+        squad.setSquadId(RandomStringUtils.randomAlphanumeric(12));
         squad.setName(RandomStringUtils.randomAlphabetic(20));
         squadDao.save(squad);
-        return squad;
+        return squadResponseMapper.map(squad);
     }
 
-    void handleMemberRequest(Squad squad, SquadifyUser member, SquadMemberAction action) {
-        action.apply(squad, member);
+    public void updateSquad(String squadId, UpdateSquadRequestDto request) {
+        Squad squad = squadDao.findBySquadId(squadId).orElseThrow(() -> new HttpClientErrorException(NOT_FOUND));
+        squad.setName(request.getName());
         squadDao.save(squad);
     }
 
-    void renameSquad(Squad squad, String newName) {
-        squad.setName(newName);
-        squadDao.save(squad);
+    public void deleteSquad(String squadId) {
+        Squad squad = squadDao.findBySquadId(squadId).orElseThrow(() -> new HttpClientErrorException(NOT_FOUND));
+        squadDao.delete(squad);
     }
 
+    public void addPlaylistUrlToSquad(Squad squad, String playlistUrl) {
+        squad.getPlaylist().setUrl(playlistUrl);
+        squadDao.save(squad);
+    }
 }

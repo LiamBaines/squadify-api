@@ -1,12 +1,8 @@
 package com.squadify.app.playlist;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.squadify.app.api.SpotifyApiFactory;
 import com.squadify.app.auth.AuthService;
-import com.squadify.app.core.SquadifyUtils;
 import com.squadify.app.squad.Squad;
-import com.squadify.app.squad.SquadDao;
 import com.squadify.app.squad.SquadService;
 import com.squadify.app.user.SquadifyUser;
 import com.wrapper.spotify.SpotifyApi;

@@ -13,7 +13,7 @@ import java.util.Optional;
 @Transactional
 public interface SquadDao extends CrudRepository<Squad, Integer> {
 
-    Optional<Squad> findBySquadKey(String squadKey);
+    Optional<Squad> findBySquadId(String squadKey);
 
     List<Squad> findByOwner(SquadifyUser owner);
 
@@ -25,4 +25,5 @@ public interface SquadDao extends CrudRepository<Squad, Integer> {
 
     boolean existsBySquadKey(String squadKey);
 
+    List<Squad> findByOwnerOrMembersContainsOrRequestsContains(SquadifyUser squadifyUser);
 }

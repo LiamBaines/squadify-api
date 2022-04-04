@@ -2,9 +2,7 @@ package com.squadify.app.user;
 
 import lombok.*;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
 
@@ -19,15 +17,15 @@ public class SquadifyUser implements Serializable {
     @Id
     private String username;
 
-    private String displayName, accessToken, refreshToken;
+    private String name, accessToken, refreshToken;
 
     public String getFirstName() {
-        return displayName.split(" ")[0];
+        return name.split(" ")[0];
     }
 
     @Override
     public String toString() {
-        return String.format("%s - %s", displayName, username);
+        return String.format("%s - %s", name, username);
     }
 
     @Override

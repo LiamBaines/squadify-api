@@ -2,6 +2,8 @@ package com.squadify.app.squad;
 
 import com.squadify.app.model.SquadDto;
 import com.squadify.app.model.UpdateSquadRequestDto;
+import com.squadify.app.playlist.Playlist;
+import com.squadify.app.playlist.PlaylistDao;
 import com.squadify.app.user.SquadifyUser;
 import com.squadify.app.user.SquadifyUserDao;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class SquadService {
 
     private final HttpSession session;
+    private final PlaylistDao playlistDao;
     private final SquadDao squadDao;
     private final SquadifyUserDao squadifyUserDao;
     private final SquadResponseMapper squadResponseMapper;
@@ -45,7 +48,9 @@ public class SquadService {
     }
 
     public void addPlaylistUrlToSquad(Squad squad, String playlistUrl) {
-        squad.getPlaylist().setUrl(playlistUrl);
+        Playlist playlist = new Playlist().setUrl(playlistUrl);
+        playlistDao.save(playlist);
+        squad.setPlaylist(playlist);
         squadDao.save(squad);
     }
 }

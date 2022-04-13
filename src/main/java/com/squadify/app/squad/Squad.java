@@ -38,6 +38,7 @@ public class Squad {
     @ToStringExclude
     private SquadifyUser owner;
 
+    @OneToOne
     private Playlist playlist;
 
     public Set<SquadifyUser> getAllUsers() {
@@ -53,14 +54,6 @@ public class Squad {
         requests.remove(member);
     }
 
-    public void addMember(SquadifyUser member) {
-        members.add(member);
-    }
-
-    public void removeRequest(SquadifyUser member) {
-        members.remove(member);
-    }
-
     @Deprecated
     public void declineMember(SquadifyUser member) {
         requests.remove(member);
@@ -71,10 +64,6 @@ public class Squad {
         if (!members.contains(member)) {
             requests.add(member);
         }
-    }
-
-    public void addRequest(SquadifyUser squadifyUser) {
-        requests.add(squadifyUser);
     }
 
     public void removeMember(SquadifyUser member) {

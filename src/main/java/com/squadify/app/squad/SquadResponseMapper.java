@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -24,7 +25,7 @@ public class SquadResponseMapper {
         squadDto.setOwner(squadifyUserResponseMapper.map(squad.getOwner()));
         squadDto.setMembers(squadifyUserResponseMapper.map(squad.getMembers()));
         squadDto.setRequests(squadifyUserResponseMapper.map(squad.getRequests()));
-        squadDto.setPlaylist(playlistResponseMapper.map(squad.getPlaylist()));
+        Optional.ofNullable(squad.getPlaylist()).map(playlistResponseMapper::map).ifPresent(squadDto::setPlaylist);
         return squadDto;
     }
 

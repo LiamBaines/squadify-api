@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.session.web.http.CookieSerializer;
+import org.springframework.session.web.http.DefaultCookieSerializer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -37,7 +39,14 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins(clientUrl).allowCredentials(true).allowedMethods("GET", "POST", "DELETE");
+        registry.addMapping("/**").allowedOrigins(clientUrl).allowCredentials(true).allowedMethods("GET", "PUT", "POST", "DELETE");
         registry.addMapping("/auth/callback").allowedOriginPatterns("https://accounts.spotify.com/");
+    }
+
+    @Bean
+    CookieSerializer cookieSerializer() {
+        DefaultCookieSerializer defaultCookieSerializer = new DefaultCookieSerializer();
+        defaultCookieSerializer.setUseHttpOnlyCookie(false);
+        return defaultCookieSerializer;
     }
 }

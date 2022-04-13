@@ -25,7 +25,7 @@ public class AuthController {
     public String callback(@RequestParam String code, @RequestParam String state, HttpSession session) throws ParseException, SpotifyWebApiException, IOException {
         SquadifyUser squadifyUser = authService.getSquadifyUserFromCode(code, config.getRedirectUrl());
         session.setAttribute("username", squadifyUser.getUsername());
-        return "redirect:" + config.getClientUrl() + state;
+        return "redirect:" + config.getClientUrl() + "/callback?state=" + state;
     }
 
 }

@@ -2,6 +2,7 @@ package com.squadify.app.squad;
 
 
 import com.squadify.app.user.SquadifyUser;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,13 +18,6 @@ public interface SquadDao extends CrudRepository<Squad, Integer> {
 
     List<Squad> findByOwner(SquadifyUser owner);
 
-    List<Squad> findByMembersContains(SquadifyUser member);
-
-    List<Squad> findByMemberRequestsContains(SquadifyUser member);
-
-    void deleteBySquadKey(String squadKey);
-
-    boolean existsBySquadKey(String squadKey);
-
-    List<Squad> findByOwnerOrMembersContainsOrRequestsContains(SquadifyUser squadifyUser);
+    @Query(value = "SELECT u FROM Squad u where u.owner = ?1 or ?1 member of u.members")
+    List<Squad> findSquads(SquadifyUser squadifyUser);
 }

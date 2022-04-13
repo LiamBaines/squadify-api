@@ -37,11 +37,9 @@ public class PlaylistCreator {
         printRepresentationPercentages(squad, squadsTopTracks, uris);
         Playlist playlist = createPlaylistFromTracks(squad, uris);
 
-//        for (SquadifyUser user : squad.getAllUsers()) {
-////            followPlaylist(user, playlist);
-////        }
-
-        followPlaylist(squad.getOwner(), playlist);
+        for (SquadifyUser user : squad.getAllUsers()) {
+            followPlaylist(user, playlist);
+        }
 
         squadService.addPlaylistUrlToSquad(squad, playlist.getId());
 

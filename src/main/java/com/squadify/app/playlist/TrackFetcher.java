@@ -17,10 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.hc.core5.http.ParseException;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
 import static com.squadify.app.core.SquadifyUtils.writeTracksToFile;
@@ -42,7 +39,7 @@ public class TrackFetcher {
         authService.refreshCredentialsForUser(user);
 
         Set<String> tracks = new LinkedHashSet<>();
-        tracks.addAll(getSavedTracks());
+//        tracks.addAll(getSavedTracks());
         tracks.addAll(getTopTracks());
         tracks.addAll(getTracksFromCreatedPlaylists());
 
@@ -63,9 +60,8 @@ public class TrackFetcher {
         return tracks;
     }
 
-
     private Set<String> getTracksFromCreatedPlaylists() throws ParseException, SpotifyWebApiException, IOException {
-        List<String> squadifyPlaylists = squadDao.findByOwner(user).stream().map(squad -> squad.getPlaylist().getUrl()).collect(toList());
+        List<String> squadifyPlaylists = squadDao.findByOwner(user).stream().map(squad -> Optional.ofNullable(squad.getPlaylist()).map(Playlist::getUrl).orElse(null)).filter(Objects::nonNull).collect(toList());
         return execute(this::playlistsRequest).stream()
                 .filter(this::ownedByUser)
                 .filter(squad -> !squadifyPlaylists.contains(squad.getUri()))

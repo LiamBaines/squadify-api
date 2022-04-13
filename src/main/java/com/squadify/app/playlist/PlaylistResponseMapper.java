@@ -18,4 +18,5 @@ public class PlaylistResponseMapper {
         playlistDto.setUrl(playlist.getUrl());
         return playlistDto;
     }
+    
 }

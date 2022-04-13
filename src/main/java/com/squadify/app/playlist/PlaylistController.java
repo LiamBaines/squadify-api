@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("v1/squads/{squadId/playlist")
+@RequestMapping("v1/squads/{squadId}/playlist")
 public class PlaylistController extends SquadifyController {
 
     private final PlaylistService playlistService;

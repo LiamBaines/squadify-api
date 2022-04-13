@@ -30,7 +30,7 @@ public class SquadController extends SquadifyController {
         squadService.updateSquad(squadId, request);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{squadId}")
     public void deleteSquad(@PathVariable String squadId) {
         squadService.deleteSquad(squadId);
     }

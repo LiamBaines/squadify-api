@@ -1,4 +1,8 @@
 spring:
+    datasource:
+        url: jdbc:mysql://localhost:8889/squadify?serverTimezone=GMT
+        username: squadify
+        password: squadify
     jpa:
         database: MYSQL
         show-sql: false
@@ -17,10 +21,10 @@ cloud:
             profile-name: default
         region:
             static: eu-west-2
-        rds:
-            squadify-dev:
-                username: admin
-                password: ${SQUADIFY_DEV_DB_PASSWORD}
-                databaseName: squadify
+#        rds:
+#            squadify-dev:
+#                username: admin
+#                password: ${SQUADIFY_DEV_DB_PASSWORD}
+#                databaseName: squadify
         stack:
             auto: false

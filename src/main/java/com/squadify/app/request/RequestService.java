@@ -24,12 +24,14 @@ public class RequestService {
         String username = (String) session.getAttribute("username");
         Squad squad = squadDao.findBySquadId(squadId).orElseThrow(() -> new HttpClientErrorException(NOT_FOUND));
         SquadifyUser squadifyUser = squadifyUserDao.findByUsername(username).orElseThrow(() -> new HttpClientErrorException(NOT_FOUND));
-        squad.addRequest(squadifyUser);
+        squad.getRequests().add(squadifyUser);
+        squadDao.save(squad);
     }
 
     public void deleteRequest(String squadId, String username) {
         Squad squad = squadDao.findBySquadId(squadId).orElseThrow(() -> new HttpClientErrorException(NOT_FOUND));
         SquadifyUser squadifyUser = squadifyUserDao.findByUsername(username).orElseThrow(() -> new HttpClientErrorException(NOT_FOUND));
-        squad.removeRequest(squadifyUser);
+        squad.getRequests().remove(squadifyUser);
+        squadDao.save(squad);
     }
 }

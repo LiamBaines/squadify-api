@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/v1/squads/{squadId}/requests")
+@RequestMapping("/v1/squads/{squadId}/requests/{username}")
 public class RequestController {
 
     private final RequestService requestService;

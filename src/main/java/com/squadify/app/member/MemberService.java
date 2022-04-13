@@ -20,13 +20,15 @@ public class MemberService {
     public void addSquadMember(String squadId, String username) {
         Squad squad = squadDao.findBySquadId(squadId).orElseThrow(() -> new HttpClientErrorException(NOT_FOUND));
         SquadifyUser member = squadifyUserDao.findByUsername(username).orElseThrow(() -> new HttpClientErrorException(NOT_FOUND));
-        squad.removeRequest(member);
-        squad.addMember(member);
+        squad.getRequests().remove(member);
+        squad.getMembers().add(member);
+        squadDao.save(squad);
     }
 
     public void removeSquadMember(String squadId, String username) {
         Squad squad = squadDao.findBySquadId(squadId).orElseThrow(() -> new HttpClientErrorException(NOT_FOUND));
         SquadifyUser member = squadifyUserDao.findByUsername(username).orElseThrow(() -> new HttpClientErrorException(NOT_FOUND));
         squad.removeMember(member);
+        squadDao.save(squad);
     }
 }

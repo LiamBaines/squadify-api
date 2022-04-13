@@ -24,7 +24,7 @@ public class SquadifyUserService {
     public SquadifyUserAndSquadsDto getSquadifyUserAndSquads() {
         String username = (String) session.getAttribute("username");
         SquadifyUser squadifyUser = squadifyUserDao.findByUsername(username).orElseThrow(() -> new HttpClientErrorException(NOT_FOUND));
-        List<Squad> squads = squadDao.findByOwnerOrMembersContainsOrRequestsContains(squadifyUser);
+        List<Squad> squads = squadDao.findSquads(squadifyUser);
         return squadifyUserAndSquadsResponseMapper.map(squadifyUser, squads);
     }
 }

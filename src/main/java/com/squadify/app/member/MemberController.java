@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("v1/squads/{squadId}/{username}")
+@RequestMapping("v1/squads/{squadId}/members/{username}")
 @RequiredArgsConstructor
 public class MemberController {
 
